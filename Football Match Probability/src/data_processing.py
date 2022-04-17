@@ -72,9 +72,9 @@ def data_processing():
     X_val[['id', 'league_name', 'target_int'] + features_to_preprocess].to_csv("./data/X_val.csv", index=False, sep=',')
     X_test[['id', 'league_name', 'target_int'] + features_to_preprocess].to_csv("./data/X_test.csv", index=False, sep=',')
 
-    X_train.to_csv("./data/X_train.csv", index=False, sep=',')
-    X_val.to_csv("./data/X_val.csv", index=False, sep=',')
-    X_test.to_csv("./data/X_test.csv", index=False, sep=',')
+    X_train.to_csv("../data/X_train.csv", index=False, sep=',')
+    X_val.to_csv("../data/X_val.csv", index=False, sep=',')
+    X_test.to_csv("../data/X_test.csv", index=False, sep=',')
     
 if __name__ == "__main__":
     data_processing()
