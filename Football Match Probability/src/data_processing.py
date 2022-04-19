@@ -68,9 +68,9 @@ def data_processing():
     # preprocess
     features_pattern = '_[0-9]|'.join(historical_features) + '_[0-9]'
     features_to_preprocess = train.filter(regex=features_pattern, axis=1).columns.tolist()
-    X_train[['id', 'league_name', 'target_int'] + features_to_preprocess].to_csv("./data/X_train.csv", index=False, sep=',')
-    X_val[['id', 'league_name', 'target_int'] + features_to_preprocess].to_csv("./data/X_val.csv", index=False, sep=',')
-    X_test[['id', 'league_name', 'target_int'] + features_to_preprocess].to_csv("./data/X_test.csv", index=False, sep=',')
+    X_train[['id', 'league_name', 'target_int'] + features_to_preprocess].to_csv("../data/X_train.csv", index=False, sep=',')
+    X_val[['id', 'league_name', 'target_int'] + features_to_preprocess].to_csv("../data/X_val.csv", index=False, sep=',')
+    X_test[['id', 'league_name'] + features_to_preprocess].to_csv("../data/X_test.csv", index=False, sep=',')
 
     X_train.to_csv("../data/X_train.csv", index=False, sep=',')
     X_val.to_csv("../data/X_val.csv", index=False, sep=',')
