@@ -22,13 +22,17 @@ def train(args):
         'home_team_history_rating',
         'home_team_history_opponent_rating',
         'home_team_history_match_days_ago',
+        'home_team_history_same_coach',
+        'home_team_history_same_league',
         
         # away based
         'away_team_history_goal', 
         'away_team_history_opponent_goal',
         'away_team_history_rating',
         'away_team_history_opponent_rating',
-        'away_team_history_match_days_ago'
+        'away_team_history_match_days_ago',
+        'away_team_history_same_coach',
+        'away_team_history_same_league'
     ] 
     
     train = pd.read_csv(args.train_dataset_path)
@@ -97,7 +101,7 @@ def train(args):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     
-    parser.add_argument("--seed", type=int, default=42,
+    parser.add_argument("--seed", type=int, default=0,
                         help="random seed")
     # data config
     parser.add_argument("--train_dataset_path", type=str, default='../data/X_train.csv',

@@ -1,7 +1,7 @@
 import datetime as dt
 import tensorflow as tf
 import pandas as pd
-
+import numpy as np
 def data_convert(df, feature: str, timesteps: int, mask:float, historical_features):
     df_ = df.copy()
     if feature not in historical_features:
@@ -25,13 +25,17 @@ def data_processing():
         'home_team_history_rating',
         'home_team_history_opponent_rating',
         'home_team_history_match_days_ago',
+        'home_team_history_same_coach',
+        'home_team_history_same_league',
         
         # away based
         'away_team_history_goal', 
         'away_team_history_opponent_goal',
         'away_team_history_rating',
         'away_team_history_opponent_rating',
-        'away_team_history_match_days_ago'
+        'away_team_history_match_days_ago',
+        'away_team_history_same_coach',
+        'away_team_history_same_league'
     ] 
     
     train = pd.read_csv('../data/train.csv')
@@ -44,10 +48,18 @@ def data_processing():
     # date based features
     for i in range(1, 11):
         train[f'home_team_history_match_days_ago_{i}'] = (train['match_date'] - train[f'home_team_history_match_date_{i}']).dt.days
+        train[f'home_team_history_same_coach_{i}'] =  np.where(train['home_team_coach_id'] == train[f'home_team_history_coach_{i}'],1,0)
+        train[f'home_team_history_same_league_{i}'] =  np.where(train['league_id'] == train[f'home_team_history_league_id_{i}'],1,0)
         train[f'away_team_history_match_days_ago_{i}'] = (train['match_date'] - train[f'away_team_history_match_date_{i}']).dt.days
+        train[f'away_team_history_same_coach_{i}'] =  np.where(train['away_team_coach_id'] == train[f'away_team_history_coach_{i}'],1,0)
+        train[f'away_team_history_same_league_{i}'] =  np.where(train['league_id'] == train[f'away_team_history_league_id_{i}'],1,0)
+        
         test[f'home_team_history_match_days_ago_{i}'] = (test['match_date'] - test[f'home_team_history_match_date_{i}']).dt.days
+        test[f'home_team_history_same_coach_{i}'] =  np.where(test['home_team_coach_id'] == test[f'home_team_history_coach_{i}'],1,0)
+        test[f'home_team_history_same_league_{i}'] =  np.where(test['league_id'] == test[f'home_team_history_league_id_{i}'],1,0)
         test[f'away_team_history_match_days_ago_{i}'] = (test['match_date'] - test[f'away_team_history_match_date_{i}']).dt.days
-    
+        test[f'away_team_history_same_coach_{i}'] =  np.where(test['away_team_coach_id'] == test[f'away_team_history_coach_{i}'],1,0)
+        test[f'away_team_history_same_league_{i}'] =  np.where(test['league_id'] == test[f'away_team_history_league_id_{i}'],1,0)
     # remove two matchs with possible error
     train = train[train['home_team_name'] != train['away_team_name']].reset_index(drop=True)
 
@@ -68,13 +80,13 @@ def data_processing():
     # preprocess
     features_pattern = '_[0-9]|'.join(historical_features) + '_[0-9]'
     features_to_preprocess = train.filter(regex=features_pattern, axis=1).columns.tolist()
-    X_train[['id', 'league_name', 'target_int'] + features_to_preprocess].to_csv("../data/X_train.csv", index=False, sep=',')
-    X_val[['id', 'league_name', 'target_int'] + features_to_preprocess].to_csv("../data/X_val.csv", index=False, sep=',')
-    X_test[['id', 'league_name'] + features_to_preprocess].to_csv("../data/X_test.csv", index=False, sep=',')
+    X_train[['id', 'league_name', 'target_int'] + features_to_preprocess].to_csv("./data/X_train.csv", index=False, sep=',')
+    X_val[['id', 'league_name', 'target_int'] + features_to_preprocess].to_csv("./data/X_val.csv", index=False, sep=',')
+    X_test[['id', 'league_name'] + features_to_preprocess].to_csv("./data/X_test.csv", index=False, sep=',')
 
-    X_train.to_csv("../data/X_train.csv", index=False, sep=',')
-    X_val.to_csv("../data/X_val.csv", index=False, sep=',')
-    X_test.to_csv("../data/X_test.csv", index=False, sep=',')
+    X_train.to_csv("./data/X_train.csv", index=False, sep=',')
+    X_val.to_csv("./data/X_val.csv", index=False, sep=',')
+    X_test.to_csv("./data/X_test.csv", index=False, sep=',')
     
 if __name__ == "__main__":
     data_processing()
